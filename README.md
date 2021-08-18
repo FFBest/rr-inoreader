@@ -68,3 +68,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### electron
+
+```
+yarn add -D electron
+根目录创建 main.js
+  写代码
+package.json
+  "main": "main.js",
+  ...
+    "electron-start": "electron ." // 配置electron的start，区别于web端的start
+```
