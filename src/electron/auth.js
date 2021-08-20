@@ -86,7 +86,20 @@ const doAuth = (appConfig, succ, error) => {
   });
 };
 
-const refreshToken = (appConfig, token, succ, error) => {};
+const refreshToken = (appConfig, token, succ, error) => {
+  post(
+    Apis.token,
+    {
+      client_id: appConfig.client_id,
+      client_secret: appConfig.client_secret,
+      refresh_token: token.refresh_token,
+      grant_type: 'authorization_code',
+    },
+    appConfig.proxy
+  )
+    .then(succ)
+    .catch(error);
+};
 
 module.exports = {
   doAuth,
