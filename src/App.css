@@ -6,3 +6,19 @@
   bottom: 0;
   left: 0;
 }
+.aside,
+.header,
+.main {
+  position: relative;
+}
+.aside {
+  background-color: #555555;
+  flex: 0 0 200px;
+}
+.header {
+  border-bottom: 1px solid #555555;
+  flex: 0 0 32px;
+}
+.main {
+  flex: 1;
+}
