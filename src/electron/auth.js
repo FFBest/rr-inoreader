@@ -31,7 +31,14 @@ const doAuth = (appConfig, succ, error) => {
       },
       appConfig.proxy
     )
-      .then(succ)
+      .then((res) => {
+        if (res.error) {
+          error(res);
+          return;
+        }
+        res['code'] = code;
+        succ(res);
+      })
       .catch(error);
   };
   const handleAuthCallback = (url) => {
@@ -87,17 +94,25 @@ const doAuth = (appConfig, succ, error) => {
 };
 
 const refreshToken = (appConfig, token, succ, error) => {
+  // client_id=[CLIENT_ID]&client_secret=[CLIENT_SECRET]&grant_type=refresh_token&refresh_token=[REFRESH_TOKEN]
   post(
     Apis.token,
     {
       client_id: appConfig.client_id,
       client_secret: appConfig.client_secret,
       refresh_token: token.refresh_token,
-      grant_type: 'authorization_code',
+      grant_type: 'refresh_token',
     },
     appConfig.proxy
   )
-    .then(succ)
+    .then((res) => {
+      if (res.error) {
+        error(res);
+        return;
+      }
+      res['code'] = token.code;
+      succ(res);
+    })
     .catch(error);
 };
 

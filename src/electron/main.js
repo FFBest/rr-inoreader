@@ -5,7 +5,7 @@ const alert = require('alert');
 const path = require('path');
 const Url = require('url');
 const Store = require('electron-store');
-const { doAuth } = require('./auth');
+const { doAuth, refreshToken } = require('./auth');
 
 const basePath = process.cwd();
 
@@ -63,19 +63,21 @@ const createWindow = () => {
     token = res;
     loadMain();
   };
-  if (!token) {
-    doAuth(appConfig, handleNewToken, (err) => {
-      alert(err);
-    });
-  } else if (token.expirse_time < currentTime - 3600000) {
-    refreshToken(appConfig, token, handleNewToken, (err) => {
-      alert(err);
-      store.delete('token');
-      createWindow();
-    });
-  } else {
-    loadMain();
+  const handleTokenError = (err) => {
+    alert(JSON.stringify(err));
+    store.delete('token');
+    createWindow();
+  };
+  if (!token || token.error) {
+    doAuth(appConfig, handleNewToken, handleTokenError);
+    return;
   }
+  if (token.expirse_time < currentTime) {
+    console.log('refreshToken');
+    refreshToken(appConfig, token, handleNewToken, handleTokenError);
+    return;
+  }
+  loadMain();
 };
 
 app.on('ready', createWindow);
