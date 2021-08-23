@@ -1,6 +1,7 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 // disable menu
 Menu.setApplicationMenu(null);
+
 const alert = require('alert');
 const path = require('path');
 const Url = require('url');
@@ -52,6 +53,11 @@ const createWindow = () => {
         basePath,
         `${app.isPackaged ? 'build' : 'public'}/icon.png`
       ),
+      webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
+        contextIsolation: false,
+      },
     });
   }
   const currentTime = new Date().getTime();
@@ -90,4 +96,11 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+ipcMain.handle('getAppConfig', () => {
+  return appConfig;
+});
+ipcMain.handle('getStore', () => {
+  return store;
 });

@@ -29,6 +29,7 @@ const doAuth = (appConfig, succ, error) => {
         code: code,
         grant_type: 'authorization_code',
       },
+      {},
       appConfig.proxy
     )
       .then((res) => {
@@ -94,7 +95,6 @@ const doAuth = (appConfig, succ, error) => {
 };
 
 const refreshToken = (appConfig, token, succ, error) => {
-  // client_id=[CLIENT_ID]&client_secret=[CLIENT_SECRET]&grant_type=refresh_token&refresh_token=[REFRESH_TOKEN]
   post(
     Apis.token,
     {
@@ -103,6 +103,7 @@ const refreshToken = (appConfig, token, succ, error) => {
       refresh_token: token.refresh_token,
       grant_type: 'refresh_token',
     },
+    {},
     appConfig.proxy
   )
     .then((res) => {
