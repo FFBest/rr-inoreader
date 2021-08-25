@@ -95,26 +95,32 @@ const doAuth = (appConfig, succ, error) => {
 };
 
 const refreshToken = (appConfig, token, succ, error) => {
-  post(
-    Apis.token,
-    {
-      client_id: appConfig.client_id,
-      client_secret: appConfig.client_secret,
-      refresh_token: token.refresh_token,
-      grant_type: 'refresh_token',
-    },
-    {},
-    appConfig.proxy
-  )
-    .then((res) => {
-      if (res.error) {
-        error(res);
-        return;
-      }
-      res['code'] = token.code;
-      succ(res);
-    })
-    .catch(error);
+  const retry = (retries, fn) => {
+    console.log('refreshToken', retries);
+    fn()
+      .then((res) => {
+        if (res.error) {
+          error(res);
+          return;
+        }
+        res['code'] = token.code;
+        succ(res);
+      })
+      .catch((err) => (retries > 1 ? retry(retries - 1, fn) : error(err)));
+  };
+  retry(3, () => {
+    return post(
+      Apis.token,
+      {
+        client_id: appConfig.client_id,
+        client_secret: appConfig.client_secret,
+        refresh_token: token.refresh_token,
+        grant_type: 'refresh_token',
+      },
+      {},
+      appConfig.proxy
+    );
+  });
 };
 
 module.exports = {

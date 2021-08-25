@@ -81,7 +81,6 @@ const createWindow = () => {
     return;
   }
   if (token.expirse_time < currentTime) {
-    console.log('refreshToken');
     refreshToken(appConfig, token, handleNewToken, handleTokenError);
     return;
   }
