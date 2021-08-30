@@ -72,7 +72,7 @@ const doAuth = (appConfig, succ, error) => {
   });
   if (appConfig.proxy) {
     authWindow.webContents.session
-      .setProxy({ proxyRules: appConfig.proxy })
+      .setProxy({ proxyRules: appConfig.proxy})
       .then(() => {
         authWindow.loadURL(authUrl);
       });

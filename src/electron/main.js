@@ -26,16 +26,17 @@ const appConfig = require(path.join(
 
 let mainWindow;
 const loadMain = () => {
+  let mainUrl = 'http://localhost:3000/';
   if (app.isPackaged) {
-    mainWindow.loadURL(
-      Url.format({
-        pathname: path.join(basePath, 'build/index.html'),
-        protocol: 'file:',
-        slashes: true,
-      })
-    );
-  } else {
-    mainWindow.loadURL('http://localhost:3000/');
+    mainUrl = Url.format({
+      pathname: path.join(basePath, 'build/index.html'),
+      protocol: 'file:',
+      slashes: true,
+    });
+  } 
+
+  mainWindow.loadURL(mainUrl);
+  if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
   mainWindow.on('closed', () => {
